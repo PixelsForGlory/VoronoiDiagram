@@ -11,7 +11,7 @@ The solution has a reference set for `UnityEngine.dll`, but the path for this as
 Additionally, this library is also dependent on the library from [PixelsForGlory/Extensions](https://github.com/PixelsForGlory/Extensions).  If using NuGet package manager, you can add the Pixels for Glory NuGet repository at http://pixelsforglory.azurewebsites.net/nuget to your package manager.  If not, the dependency can be resolved manually by downloading the library from the [latest release](https://github.com/PixelsForGlory/Extensions/releases).
 
 ## Installation
-From a build or downloaded release, copy the `GradientGenerator.dll` to `[PROJECT DIR]\Assets\Plugins`.
+From a build or downloaded release, copy the `VoronoiDiagram.dll` to `[PROJECT DIR]\Assets\Plugins`.
 
 If using the Pixels for Glory NuGet repository, install the `PixelsForGlory.VoronoiDiagram` package into your own class library project or install the `PixelsForGlory.Unity3D.VoronoiDiagram` package into a Unity3D project.
 
@@ -62,7 +62,7 @@ Fortune's Algorithm as outlined in:
 Steve J. Fortune (1987). "A Sweepline Algorithm for Voronoi Diagrams". Algorithmica 2, 153-174. 
 
 Lloyd's algorithm as outlined in:
-Lloyd, Stuart P. (1982), "Least squares quantization in PCM", IEEE Transactions on Information Theory 28 (2): 129–137
+Lloyd, Stuart P. (1982), "Least squares quantization in PCM", IEEE Transactions on Information Theory 28 (2): 129â€“137
 
 Monotone Chain Convex Hull Algorithm outlined in:
 A. M. Andrew, "Another Efficient Algorithm for Convex Hulls in Two Dimensions", Info. Proc. Letters 9, 216-219 (1979)
