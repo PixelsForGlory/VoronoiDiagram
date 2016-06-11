@@ -1,0 +1,111 @@
+# ---------------------
+# GENERAL CONFIGURATION
+# ---------------------
+
+# Version format
+version: 1.0.{build}
+
+# Branches to build
+branches:
+  only:
+    - master
+
+skip_tags: true
+
+build:
+  verbosity: minimal
+
+# -------------------------
+# ENVIRONMENT CONFIGURATION
+# -------------------------
+
+# VM template
+os: Visual Studio 2015 RC
+
+# Environment variables
+environment:
+  build_scripts_dir: C:\buildScripts
+  dependencies_dir: C:\dependencies
+  work_dir: C:\work
+  staging_dir: C:\work\staging
+  temp_dir: C:\temp
+  pixels_for_glory_nuget_repo: http://pixelsforglory.azurewebsites.net/nuget
+
+# Clone directory
+clone_folder: C:\work\source
+
+# Init scripts called before cloning
+init:
+- ps: New-Item "$env:BUILD_SCRIPTS_DIR" -type directory | Out-Null
+- ps: New-Item "$env:DEPENDENCIES_DIR" -type directory | Out-Null
+- ps: New-Item "$env:STAGING_DIR" -type directory | Out-Null
+- ps: New-Item "$env:TEMP_DIR" -type directory | Out-Null
+- ps: wget -OutFile "$env:TEMP_DIR\AppVeyorBuildScripts.zip" "https://github.com/afuzzyllama/AppVeyorBuildScripts/archive/master.zip"
+- ps: 7z x "$env:TEMP_DIR\AppVeyorBuildScripts.zip" -o"$env:TEMP_DIR"
+- ps: Move-Item "$env:TEMP_DIR\AppVeyorBuildScripts-master\*" "$env:BUILD_SCRIPTS_DIR\"
+- ps: Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\getUnity3D.ps1`""
+
+# scripts that run after cloning repository
+install:
+- ps: Invoke-Expression "& `"nuget sources add -Name PixelsForGloryNuGet -Source $env:PIXELS_FOR_GLORY_NUGET_REPO`""
+
+assembly_info:
+  patch: true
+  file: VoronoiDiagram\Properties\AssemblyInfo.cs
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}-$(appveyor_repo_commit)'
+
+# -------------------
+# BUILD CONFIGURATION
+# -------------------
+build_script:
+- ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\build.ps1`""
+
+after_build:
+- ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\packageBuild.ps1`""
+- ps: 7z a ([string]::Format("{0}\{1}.{2}.zip", $env:STAGING_DIR, $env:APPVEYOR_PROJECT_NAME, $env:APPVEYOR_BUILD_VERSION)) $env:STAGING_DIR\ReleaseContents\*
+- ps: Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\packNuget.ps1`" $env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.nuspec"
+- ps: Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\packNuget.ps1`" $env:APPVEYOR_BUILD_FOLDER\$($env:APPVEYOR_PROJECT_NAME)Unity3D.nuspec"
+- ps: Get-ChildItem $env:STAGING_DIR\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+- ps: Get-ChildItem $env:APPVEYOR_BUILD_FOLDER\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+# ------------------
+# TEST CONFIGURATION
+# ------------------
+test_script:
+- ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\test.ps1`""
+
+# ------------------------
+# DEPLOYMENT CONFIGURATION
+# ------------------------
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: 6rKcqEAzPD0o7RiGVFFaUVXts2nGs3w9SOMTayT3hFQVpc2rCX1rh5Lsg4SqkkrP
+  tag: VoronoiDiagram-v$(appveyor_build_version)
+  release: VoronoiDiagram-v$(appveyor_build_version)
+  description: "Successful CI build of library.  Please consult the [ReadMe](https://github.com/PixelsForGlory/VoronoiDiagram/blob/master/README.md) for implementing this release into your project."
+  artifact: /.*\.zip/, /.*\.nupkg/
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    appveyor_repo_tag: false
+
+- provider: NuGet
+  server: http://pixelsforglory.azurewebsites.net/
+  api_key:
+    secure: uCzJhW61wTtA8dT/osbz/ZlAP/D6xKNWoC+Pz93n3DGFi6pZNVH9lfjRFU5E3M64
+  skip_symbols: true
+  symbol_server:           # remove to push symbols to SymbolSource.org
+  artifact: /.*\.nupkg/
+
+# ---------------------------   
+# NOTIFICATIONS CONFIGURATION
+# ---------------------------
+notifications: 
+- provider: Email
+  to: 
+  - karcieri@gmail.com
+  on_build_status_changed: true

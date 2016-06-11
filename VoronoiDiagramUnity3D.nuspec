@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PixelsForGlory.Unity3D.VoronoiDiagram</id>
+    <version>0.0.0</version>
+    <authors>afuzzyllama</authors>
+    <owners>afuzzyllama</owners>
+    <licenseUrl>https://github.com/PixelsForGlory/VoronoiDiagram/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/PixelsForGlory/VoronoiDiagram/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Library to create voronoi diagrams in Unity3D. This package is designed to be installed into a Unity3D project.</description>
+    <copyright>Copyright 2016</copyright>
+    <tags>Unity3D Voronoi</tags>
+  </metadata>
+  <files>
+    <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.dll" target="content\Assets\Plugins\PixelsForGlory\VoronoiDiagram" />
+    <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.pdb" target="content\Assets\Plugins\PixelsForGlory\VoronoiDiagram" />
+  </files>
+</package>
