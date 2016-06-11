@@ -54,7 +54,7 @@ The following code:
 
 Will create a image similar to:
 
-![Voronoi Diagram](raw/master/blob/master/VoronoiDiagramTest/OriginalImages/Diagram.png?raw=true "Voronoi Diagram")
+![Voronoi Diagram](./blob/master/VoronoiDiagramTest/OriginalImages/Diagram.png?raw=true "Voronoi Diagram")
 
 Citations:
 ----------
