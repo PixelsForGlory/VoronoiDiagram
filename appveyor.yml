@@ -29,7 +29,6 @@ environment:
   work_dir: C:\work
   staging_dir: C:\work\staging
   temp_dir: C:\temp
-  pixels_for_glory_nuget_repo: http://pixelsforglory.azurewebsites.net/nuget
 
 # Clone directory
 clone_folder: C:\work\source
@@ -56,8 +55,8 @@ assembly_info:
 # BUILD CONFIGURATION
 # -------------------
 before_build:
-- ps: Invoke-Expression "& `"nuget sources add -Name PixelsForGloryNuGet -Source $env:PIXELS_FOR_GLORY_NUGET_REPO`""
-- ps: Invoke-Expression "& `"nuget restore $env:APPVEYOR_BUILD_FOLDER\VoronoiDiagram.sln`""
+- nuget sources add -Name PixelsForGloryNuGet -Source http://pixelsforglory.azurewebsites.net/nuget
+- nuget restore 
 
 build_script:
 - ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\build.ps1`""
