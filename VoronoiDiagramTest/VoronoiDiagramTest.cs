@@ -2040,6 +2040,7 @@ namespace VoronoiDiagramTest
                         testBitmap.SetPixel(x, y, color);
                     }
                 }
+                testBitmap.Save("Diagram.png");
 
                 for (int x = 0; x < width; x++)
                 {
