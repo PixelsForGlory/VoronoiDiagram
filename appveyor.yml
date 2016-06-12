@@ -18,17 +18,23 @@ build:
 # -------------------------
 # ENVIRONMENT CONFIGURATION
 # -------------------------
+build_scripts_dir: &build_scripts_dir C:\buildScripts
+dependencies_dir: &dependencies_dir C:\dependencies
+work_dir: &work_dir C:\work
+staging_dir: &staging_dir C:\work\staging
+temp_dir: &temp_dir C:\temp
+
 
 # VM template
 os: Visual Studio 2015 RC
 
 # Environment variables
 environment:
-  build_scripts_dir: C:\buildScripts
-  dependencies_dir: C:\dependencies
-  work_dir: C:\work
-  staging_dir: C:\work\staging
-  temp_dir: C:\temp
+  build_scripts_dir: *build_scripts_dir
+  dependencies_dir: *dependencies_dir
+  work_dir: *work_dir
+  staging_dir: *staging_dir
+  temp_dir: *temp_dir
 
 # Clone directory
 clone_folder: C:\work\source
