@@ -19,9 +19,13 @@ build:
 # ENVIRONMENT CONFIGURATION
 # -------------------------
 build_scripts_dir: &build_scripts_dir C:\buildScripts
+
 dependencies_dir: &dependencies_dir C:\dependencies
+
 work_dir: &work_dir C:\work
+
 staging_dir: &staging_dir C:\work\staging
+
 temp_dir: &temp_dir C:\temp
 
 
