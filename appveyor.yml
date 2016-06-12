@@ -42,7 +42,15 @@ init:
 - ps: wget -OutFile "$env:TEMP_DIR\AppVeyorBuildScripts.zip" "https://github.com/afuzzyllama/AppVeyorBuildScripts/archive/master.zip"
 - ps: 7z x "$env:TEMP_DIR\AppVeyorBuildScripts.zip" -o"$env:TEMP_DIR"
 - ps: Move-Item "$env:TEMP_DIR\AppVeyorBuildScripts-master\*" "$env:BUILD_SCRIPTS_DIR\"
-- ps: Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\getUnity3D.ps1`""
+- ps: >-
+    try 
+    {
+      Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\getUnity3D.ps1`""
+    }
+    catch
+    {
+      $host.SetShouldExit($true)
+    }
 
 assembly_info:
   patch: true
