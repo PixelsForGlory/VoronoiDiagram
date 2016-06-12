@@ -59,10 +59,10 @@ before_build:
 - nuget restore 
 
 build_script:
-- PowerShell "$env:APPVEYOR_BUILD_FOLDER\build.ps1"
+- PowerShell .\build.ps1
 
 after_build:
-- PowerShell $env:APPVEYOR_BUILD_FOLDER\packageBuild.ps1
+- PowerShell .\packageBuild.ps1
 - ps: 7z a ([string]::Format("{0}\{1}.{2}.zip", $env:STAGING_DIR, $env:APPVEYOR_PROJECT_NAME, $env:APPVEYOR_BUILD_VERSION)) $env:STAGING_DIR\ReleaseContents\*
 - PowerShell $env:BUILD_SCRIPTS_DIR\packNuget.ps1 $env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.nuspec
 - PowerShell $env:BUILD_SCRIPTS_DIR\packNuget.ps1 $env:APPVEYOR_BUILD_FOLDER\$($env:APPVEYOR_PROJECT_NAME)Unity3D.nuspec
@@ -73,7 +73,7 @@ after_build:
 # TEST CONFIGURATION
 # ------------------
 test_script:
-- PowerShell "$env:APPVEYOR_BUILD_FOLDER\test.ps1"
+- PowerShell .\test.ps1
 
 # ------------------------
 # DEPLOYMENT CONFIGURATION
