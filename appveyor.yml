@@ -62,7 +62,7 @@ build_script:
 - ps: >-
     try 
     {
-      Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\build.ps1; if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }`""
+      Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\build.ps1`""
     }
     catch
     {
@@ -108,7 +108,7 @@ test_script:
 - ps: >-
     try 
     {
-      Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\test.ps1; if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }`""
+      Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\test.ps1`""
     }
     catch
     {
