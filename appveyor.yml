@@ -59,7 +59,7 @@ before_build:
 - nuget restore 
 
 build_script:
-- PowerShell $env:APPVEYOR_BUILD_FOLDER\build.ps1
+- PowerShell "$env:APPVEYOR_BUILD_FOLDER\build.ps1"
 
 after_build:
 - PowerShell $env:APPVEYOR_BUILD_FOLDER\packageBuild.ps1
@@ -73,7 +73,7 @@ after_build:
 # TEST CONFIGURATION
 # ------------------
 test_script:
-- PowerShell $env:APPVEYOR_BUILD_FOLDER\test.ps1
+- PowerShell "$env:APPVEYOR_BUILD_FOLDER\test.ps1"
 
 # ------------------------
 # DEPLOYMENT CONFIGURATION
