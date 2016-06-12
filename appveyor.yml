@@ -18,27 +18,17 @@ build:
 # -------------------------
 # ENVIRONMENT CONFIGURATION
 # -------------------------
-build_scripts_dir: &build_scripts_dir C:\buildScripts
-
-dependencies_dir: &dependencies_dir C:\dependencies
-
-work_dir: &work_dir C:\work
-
-staging_dir: &staging_dir C:\work\staging
-
-temp_dir: &temp_dir C:\temp
-
 
 # VM template
 os: Visual Studio 2015 RC
 
 # Environment variables
 environment:
-  build_scripts_dir: *build_scripts_dir
-  dependencies_dir: *dependencies_dir
-  work_dir: *work_dir
-  staging_dir: *staging_dir
-  temp_dir: *temp_dir
+  build_scripts_dir: C:\buildScripts
+  dependencies_dir: C:\dependencies
+  work_dir: C:\work
+  staging_dir: C:\work\staging
+  temp_dir: C:\temp
 
 # Clone directory
 clone_folder: C:\work\source
@@ -69,13 +59,13 @@ before_build:
 - nuget restore 
 
 build_script:
-- PowerShell .\build.ps1
+- ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\build.ps1; if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }`""
 
 after_build:
-- ps: $env:APPVEYOR_BUILD_FOLDER\packageBuild.ps1
+- ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\packageBuild.ps1`""
 - ps: 7z a ([string]::Format("{0}\{1}.{2}.zip", $env:STAGING_DIR, $env:APPVEYOR_PROJECT_NAME, $env:APPVEYOR_BUILD_VERSION)) $env:STAGING_DIR\ReleaseContents\*
-- PowerShell $env:BUILD_SCRIPTS_DIR\packNuget.ps1 $env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.nuspec
-- PowerShell $env:BUILD_SCRIPTS_DIR\packNuget.ps1 $env:APPVEYOR_BUILD_FOLDER\$($env:APPVEYOR_PROJECT_NAME)Unity3D.nuspec
+- ps: Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\packNuget.ps1`" $env:APPVEYOR_BUILD_FOLDER\$env:APPVEYOR_PROJECT_NAME.nuspec"
+- ps: Invoke-Expression "& `"$env:BUILD_SCRIPTS_DIR\packNuget.ps1`" $env:APPVEYOR_BUILD_FOLDER\$($env:APPVEYOR_PROJECT_NAME)Unity3D.nuspec"
 - ps: Get-ChildItem $env:STAGING_DIR\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 - ps: Get-ChildItem $env:APPVEYOR_BUILD_FOLDER\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
@@ -83,7 +73,7 @@ after_build:
 # TEST CONFIGURATION
 # ------------------
 test_script:
-- PowerShell .\test.ps1
+- ps: Invoke-Expression "& `"$env:APPVEYOR_BUILD_FOLDER\test.ps1; if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }`""
 
 # ------------------------
 # DEPLOYMENT CONFIGURATION
