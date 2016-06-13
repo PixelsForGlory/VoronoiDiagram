@@ -2040,15 +2040,21 @@ namespace VoronoiDiagramTest
                         testBitmap.SetPixel(x, y, color);
                     }
                 }
-                testBitmap.Save("Diagram.png");
 
+                int differentPixels = 0;
                 for (int x = 0; x < width; x++)
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        Assert.AreEqual(testBitmap.GetPixel(x, y), originalBitmap.GetPixel(x, y));
+                        if(testBitmap.GetPixel(x, y) != originalBitmap.GetPixel(x, y))
+                        {
+                            differentPixels++;
+                        }
                     }
                 }
+
+                // Allow for a 0.5% difference
+                Assert.IsTrue(differentPixels < Mathf.RoundToInt((width * height) * 0.005f));
             }
         }
     }

@@ -123,18 +123,6 @@ test_script:
       $host.SetShouldExit($true)
     }
 
-after_test:
-- ps: >-
-    try 
-    {
-      Invoke-Expression "Push-AppveyorArtifact $env:APPVEYOR_BUILD_FOLDER\VoronoiDiagramTest\bin\Release\Diagram.png"
-    }
-    catch
-    {
-      $host.SetShouldExit($true)
-    }
-
-
 # ------------------------
 # DEPLOYMENT CONFIGURATION
 # ------------------------
