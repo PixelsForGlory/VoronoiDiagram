@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using PixelsForGlory.VoronoiDiagram;
 
-public static class VoronoiDiagramExtensions
+public static class VoronoiColorDiagramExtensions
 {
     /// <summary>
     /// Creates a list of colors of the Voronoi Diagram. Assumes that diagram has been run through GenerateDiagram
     /// </summary>
     /// <param name="voronoiDiagram">Voronoi Diagram</param>
     /// <returns>List of colors</returns>
-    public static List<Color> GenerateColorList(this VoronoiDiagram voronoiDiagram)
+    public static List<Color> GenerateColorList(this VoronoiColorDiagram voronoiDiagram)
     {
         var colorData = new List<Color>();
 
@@ -18,7 +18,7 @@ public static class VoronoiDiagramExtensions
             colorData.Add(Color.white);
         }
 
-        foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite> site in voronoiDiagram.GeneratedSites)
+        foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<Color>> site in voronoiDiagram.GeneratedSites)
         {
             if (site.Value.Vertices.Count == 0)
             {
@@ -80,7 +80,7 @@ public static class VoronoiDiagramExtensions
                         if (voronoiDiagram.Bounds.Contains(new Vector2(x, y)))
                         {
                             int index = x + y * (int)voronoiDiagram.Bounds.width;
-                            colorData[index] = site.Value.Color;
+                            colorData[index] = site.Value.SiteData;
                         }
                     }
                 }

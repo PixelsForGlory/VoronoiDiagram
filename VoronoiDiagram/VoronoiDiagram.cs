@@ -5,16 +5,23 @@ using UnityEngine;
 
 namespace PixelsForGlory.VoronoiDiagram
 {
+    public class VoronoiColorDiagram : VoronoiDiagram<Color>
+    {
+        public VoronoiColorDiagram() : base() {}
+
+        public VoronoiColorDiagram(Rect bounds) : base(bounds){}
+    }
+
     /// <summary>
     /// Generates a voronoi diagram
     /// </summary>
-    public class VoronoiDiagram
+    public class VoronoiDiagram<T> where T : new()
     {
         // Bounds of the Voronoi Diagram
         public Rect Bounds;
 
         // Generated sites.  Filled after GenerateSites() is called
-        public Dictionary<int, VoronoiDiagramGeneratedSite> GeneratedSites;
+        public Dictionary<int, VoronoiDiagramGeneratedSite<T>> GeneratedSites;
 
         private readonly List<Vector2> _originalSites;
 
@@ -33,10 +40,18 @@ namespace PixelsForGlory.VoronoiDiagram
         // Stores the delta values of the minimum and maximum values.
         private Vector2 _deltaValues;
 
+        public VoronoiDiagram()
+        {
+            Bounds = new Rect();
+            GeneratedSites = new Dictionary<int, VoronoiDiagramGeneratedSite<T>>();
+            _originalSites = new List<Vector2>();
+            _sites = new List<VoronoiDiagramSite>();
+        }
+
         public VoronoiDiagram(Rect bounds)
         {
             Bounds = bounds;
-            GeneratedSites = new Dictionary<int, VoronoiDiagramGeneratedSite>();
+            GeneratedSites = new Dictionary<int, VoronoiDiagramGeneratedSite<T>>();
             _originalSites = new List<Vector2>();
             _sites = new List<VoronoiDiagramSite>();
         }
@@ -183,8 +198,8 @@ namespace PixelsForGlory.VoronoiDiagram
                         // These three sites define a Delaunay triangle
                         // Bottom, Top, EdgeList.GetRightRegion(rightBound);
                         // Debug.Log(string.Format("Delaunay triagnle: ({0}, {1}), ({2}, {3}), ({4}, {5})"),
-                        //        bottom.Coordinate.x, bottom.Coordinate.y,
-                        //      top.Coordinate.x, top.Coordinate.y,
+                        //      bottomSite.Coordinate.x, bottomSite.Coordinate.y,
+                        //      topSite.Coordinate.x, topSite.Coordinate.y,
                         //      edgeList.GetRightRegion(leftBound).Coordinate.x,
                         //      edgeList.GetRightRegion(leftBound).Coordinate.y);
 
@@ -260,8 +275,7 @@ namespace PixelsForGlory.VoronoiDiagram
 
                 foreach(VoronoiDiagramSite site in _sites)
                 {
-                    var generatedSite = new VoronoiDiagramGeneratedSite(site.Index, site.Coordinate, site.Centroid,
-                        Color.white, site.IsCorner, site.IsEdge);
+                    var generatedSite = new VoronoiDiagramGeneratedSite<T>(site.Index, site.Coordinate, site.Centroid, new T(), site.IsCorner, site.IsEdge);
                     generatedSite.Vertices.AddRange(site.Vertices);
 
                     foreach(VoronoiDiagramEdge siteEdge in site.Edges)
@@ -297,10 +311,9 @@ namespace PixelsForGlory.VoronoiDiagram
                 _sites.Clear();
 
                 // Lloyd's Algorithm
-                foreach(KeyValuePair<int, VoronoiDiagramGeneratedSite> generatedSite in GeneratedSites)
+                foreach(KeyValuePair<int, VoronoiDiagramGeneratedSite<T>> generatedSite in GeneratedSites)
                 {
-                    var centroidPoint = new Vector2(Mathf.RoundToInt(generatedSite.Value.Centroid.x),
-                        Mathf.RoundToInt(generatedSite.Value.Centroid.y));
+                    var centroidPoint = new Vector2(Mathf.RoundToInt(generatedSite.Value.Centroid.x), Mathf.RoundToInt(generatedSite.Value.Centroid.y));
                     if(!Bounds.Contains(centroidPoint))
                     {
                         Debug.LogError("Centroid point outside of diagram bounds");
