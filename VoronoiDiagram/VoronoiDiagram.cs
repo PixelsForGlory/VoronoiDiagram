@@ -325,6 +325,7 @@ namespace PixelsForGlory.VoronoiDiagram
                 SortSitesAndSetValues();
             }
         }
+
         /// <summary>
         /// Creates a 1d array of the Voronoi Diagram. Assumes that diagram has been run through GenerateDiagram
         /// </summary>
@@ -410,13 +411,17 @@ namespace PixelsForGlory.VoronoiDiagram
             return returnData;
         }
 
+        /// <summary>
+        /// Creates a 2d array of the Voronoi Diagram. Assumes that diagram has been run through GenerateDiagram
+        /// </summary>
+        /// <returns>2d array of T</returns>
         public T[,] Get2DSampleArray()
         {
             var returnData = new T[(int)Bounds.width, (int)Bounds.height];
 
-            for (int x = 0; x <= (int)Bounds.width; x++)
+            for (int x = 0; x < (int)Bounds.width; x++)
             {
-                for(int y = 0; y <= (int)Bounds.height; y++)
+                for(int y = 0; y < (int)Bounds.height; y++)
                 {
                     returnData[x, y] = default(T);
                 }
