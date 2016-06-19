@@ -325,6 +325,173 @@ namespace PixelsForGlory.VoronoiDiagram
                 SortSitesAndSetValues();
             }
         }
+        /// <summary>
+        /// Creates a 1d array of the Voronoi Diagram. Assumes that diagram has been run through GenerateDiagram
+        /// </summary>
+        /// <returns>1d array of T</returns>
+        public T[] Get1DSampleArray()
+        {
+            var returnData = new T[(int)Bounds.width * (int)Bounds.height];
+
+            for (int i = 0; i < returnData.Length; i++)
+            {
+                returnData[i] = default(T);
+            }
+
+            foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<T>> site in GeneratedSites)
+            {
+                if (site.Value.Vertices.Count == 0)
+                {
+                    continue;
+                }
+
+                Vector2 minimumVertex = site.Value.Vertices[0];
+                Vector2 maximumVertex = site.Value.Vertices[0];
+
+                for (int i = 1; i < site.Value.Vertices.Count; i++)
+                {
+                    if (site.Value.Vertices[i].x < minimumVertex.x)
+                    {
+                        minimumVertex.x = site.Value.Vertices[i].x;
+                    }
+
+                    if (site.Value.Vertices[i].y < minimumVertex.y)
+                    {
+                        minimumVertex.y = site.Value.Vertices[i].y;
+                    }
+
+                    if (site.Value.Vertices[i].x > maximumVertex.x)
+                    {
+                        maximumVertex.x = site.Value.Vertices[i].x;
+                    }
+
+                    if (site.Value.Vertices[i].y > maximumVertex.y)
+                    {
+                        maximumVertex.y = site.Value.Vertices[i].y;
+                    }
+                }
+
+                if (minimumVertex.x < 0.0f)
+                {
+                    minimumVertex.x = 0.0f;
+                }
+
+                if (minimumVertex.y < 0.0f)
+                {
+                    minimumVertex.y = 0.0f;
+                }
+
+                if (maximumVertex.x > Bounds.width)
+                {
+                    maximumVertex.x = Bounds.width;
+                }
+
+                if (maximumVertex.y > Bounds.height)
+                {
+                    maximumVertex.y = Bounds.height;
+                }
+
+                for (int x = (int)minimumVertex.x; x <= maximumVertex.x; x++)
+                {
+                    for (int y = (int)minimumVertex.y; y <= maximumVertex.y; y++)
+                    {
+                        if (PointInVertices(new Vector2(x, y), site.Value.Vertices))
+                        {
+                            if(Bounds.Contains(new Vector2(x, y)))
+                            {
+                                int index = x + y * (int)Bounds.width;
+                                returnData[index] = site.Value.SiteData;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return returnData;
+        }
+
+        public T[,] Get2DSampleArray()
+        {
+            var returnData = new T[(int)Bounds.width, (int)Bounds.height];
+
+            for (int x = 0; x <= (int)Bounds.width; x++)
+            {
+                for(int y = 0; y <= (int)Bounds.height; y++)
+                {
+                    returnData[x, y] = default(T);
+                }
+            }
+
+            foreach (KeyValuePair<int, VoronoiDiagramGeneratedSite<T>> site in GeneratedSites)
+            {
+                if (site.Value.Vertices.Count == 0)
+                {
+                    continue;
+                }
+
+                Vector2 minimumVertex = site.Value.Vertices[0];
+                Vector2 maximumVertex = site.Value.Vertices[0];
+
+                for (int i = 1; i < site.Value.Vertices.Count; i++)
+                {
+                    if (site.Value.Vertices[i].x < minimumVertex.x)
+                    {
+                        minimumVertex.x = site.Value.Vertices[i].x;
+                    }
+
+                    if (site.Value.Vertices[i].y < minimumVertex.y)
+                    {
+                        minimumVertex.y = site.Value.Vertices[i].y;
+                    }
+
+                    if (site.Value.Vertices[i].x > maximumVertex.x)
+                    {
+                        maximumVertex.x = site.Value.Vertices[i].x;
+                    }
+
+                    if (site.Value.Vertices[i].y > maximumVertex.y)
+                    {
+                        maximumVertex.y = site.Value.Vertices[i].y;
+                    }
+                }
+
+                if (minimumVertex.x < 0.0f)
+                {
+                    minimumVertex.x = 0.0f;
+                }
+
+                if (minimumVertex.y < 0.0f)
+                {
+                    minimumVertex.y = 0.0f;
+                }
+
+                if (maximumVertex.x > Bounds.width)
+                {
+                    maximumVertex.x = Bounds.width;
+                }
+
+                if (maximumVertex.y > Bounds.height)
+                {
+                    maximumVertex.y = Bounds.height;
+                }
+
+                for (int x = (int)minimumVertex.x; x <= maximumVertex.x; x++)
+                {
+                    for (int y = (int)minimumVertex.y; y <= maximumVertex.y; y++)
+                    {
+                        if (PointInVertices(new Vector2(x, y), site.Value.Vertices))
+                        {
+                            if (Bounds.Contains(new Vector2(x, y)))
+                            {
+                                returnData[x, y] = site.Value.SiteData;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return returnData;
+        }
 
         /// <summary>
         /// Sorts sites and calculates _minValues and _deltaValues
@@ -445,6 +612,40 @@ namespace PixelsForGlory.VoronoiDiagram
             {
                 return halfEdge.Edge.LeftSite;
             }
+        }
+
+        /// <summary>
+        /// Does the passed in point lie inside of the vertices passed in.  The vertices are assumed to be sorted.
+        /// </summary>
+        /// <param name="point">Point that lies inside the vertices?</param>
+        /// <param name="vertices">Sorted vertices</param>
+        /// <returns></returns>
+        private static bool PointInVertices(Vector2 point, List<Vector2> vertices)
+        {
+            int i;
+            int j = vertices.Count - 1;
+
+            bool oddNodes = false;
+
+            for (i = 0; i < vertices.Count; ++i)
+            {
+                if (
+                    (vertices[i].y < point.y && vertices[j].y >= point.y ||
+                     vertices[j].y < point.y && vertices[i].y >= point.y) &&
+                    (vertices[i].x <= point.x || vertices[j].x <= point.x)
+                    )
+                {
+                    if (vertices[i].x +
+                       (point.y - vertices[i].y) / (vertices[j].y - vertices[i].y) * (vertices[j].x - vertices[i].x) <
+                       point.x)
+                    {
+                        oddNodes = !oddNodes;
+                    }
+                }
+                j = i;
+            }
+
+            return oddNodes;
         }
     }
 }

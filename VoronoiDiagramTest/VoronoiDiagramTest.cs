@@ -2027,7 +2027,7 @@ namespace VoronoiDiagramTest
             voronoiDiagram.GeneratedSites[999].SiteData = new Color(0.5691673f, 0.3785411f, 0.6571122f);
 
 
-            List<Color> colors = voronoiDiagram.GenerateColorList();
+            Color[] colors = voronoiDiagram.Get1DSampleArray();
 
             using (var testBitmap = new Bitmap(width, height))
             using (var originalBitmap = new Bitmap(@".\OriginalImages\Diagram.png"))

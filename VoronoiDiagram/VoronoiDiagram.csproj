@@ -46,7 +46,6 @@
     <Compile Include="VoronoiDiagram.cs" />
     <Compile Include="VoronoiDiagramEdge.cs" />
     <Compile Include="VoronoiDiagramEdgeList.cs" />
-    <Compile Include="VoronoiDiagramExtensions.cs" />
     <Compile Include="VoronoiDiagramGeneratedEdge.cs" />
     <Compile Include="VoronoiDiagramGeneratedSite.cs" />
     <Compile Include="VoronoiDiagramHalfEdge.cs" />
