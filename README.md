@@ -47,7 +47,7 @@ The following code:
     }
 
     var outImg = new Texture2D(width, height);
-    outImg.SetPixels(voronoiDiagram.GenerateColorList().ToArray());
+    outImg.SetPixels(voronoiDiagram.Get1DSampleArray().ToArray());
     outImg.Apply();
 
     System.IO.File.WriteAllBytes("diagram.png", outImg.EncodeToPNG());
