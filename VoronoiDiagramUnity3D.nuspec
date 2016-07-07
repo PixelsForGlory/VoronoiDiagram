@@ -15,5 +15,6 @@
   <files>
     <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.dll" target="content\Assets\Plugins\PixelsForGlory\VoronoiDiagram" />
     <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.pdb" target="content\Assets\Plugins\PixelsForGlory\VoronoiDiagram" />
+    <file src="NuGetTools\Uninstall.ps1" target="tools\PixelsForGlory\VoronoiDiagram\" />
   </files>
 </package>
