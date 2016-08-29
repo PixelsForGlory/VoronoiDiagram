@@ -7,7 +7,7 @@ namespace PixelsForGlory.VoronoiDiagram
 {
     public class VoronoiColorDiagram : VoronoiDiagram<Color>
     {
-        public VoronoiColorDiagram() : base() {}
+        public VoronoiColorDiagram() {}
 
         public VoronoiColorDiagram(Rect bounds) : base(bounds){}
     }
@@ -23,13 +23,13 @@ namespace PixelsForGlory.VoronoiDiagram
         // Generated sites.  Filled after GenerateSites() is called
         public Dictionary<int, VoronoiDiagramGeneratedSite<T>> GeneratedSites;
 
-        private readonly List<Vector2> _originalSites;
+        private readonly List<VoronoiDiagramSite<T>> _originalSites;
 
         // Stored added points as Sites that are currently being processed.  Ordered lexigraphically by y and then x
-        private readonly List<VoronoiDiagramSite> _sites;
+        private readonly List<VoronoiDiagramSite<T>> _sites;
 
         // Stores the bottom most site when running GenerateEdges
-        private VoronoiDiagramSite _bottomMostSite;
+        private VoronoiDiagramSite<T> _bottomMostSite;
 
         // Stores the current site index when running GenerateEdges
         private int _currentSiteIndex;
@@ -44,16 +44,16 @@ namespace PixelsForGlory.VoronoiDiagram
         {
             Bounds = new Rect();
             GeneratedSites = new Dictionary<int, VoronoiDiagramGeneratedSite<T>>();
-            _originalSites = new List<Vector2>();
-            _sites = new List<VoronoiDiagramSite>();
+            _originalSites = new List<VoronoiDiagramSite<T>>();
+            _sites = new List<VoronoiDiagramSite<T>>();
         }
 
         public VoronoiDiagram(Rect bounds)
         {
             Bounds = bounds;
             GeneratedSites = new Dictionary<int, VoronoiDiagramGeneratedSite<T>>();
-            _originalSites = new List<Vector2>();
-            _sites = new List<VoronoiDiagramSite>();
+            _originalSites = new List<VoronoiDiagramSite<T>>();
+            _sites = new List<VoronoiDiagramSite<T>>();
         }
 
         /// <summary>
@@ -61,19 +61,18 @@ namespace PixelsForGlory.VoronoiDiagram
         /// </summary>
         /// <param name="points">List of points to be added.</param>
         /// <returns>True if added successful, false otherwise.  If false, no points are added.</returns>
-        public bool AddPoints(List<Vector2> points)
+        public bool AddSites(List<VoronoiDiagramSite<T>> points)
         {
-            foreach(Vector2 point in points)
+            foreach(VoronoiDiagramSite<T> point in points)
             {
-                if(!Bounds.Contains(point))
+                if(!Bounds.Contains(point.Coordinate))
                 {
-                    Debug.LogError(string.Format("point ({0}, {1}) out of diagram bounds ({2}, {3})", point.x, point.y,
-                        Bounds.width, Bounds.height));
+                    Debug.LogError(string.Format("point ({0}, {1}) out of diagram bounds ({2}, {3})", point.Coordinate.x, point.Coordinate.y, Bounds.width, Bounds.height));
                     return false;
                 }
             }
 
-            foreach(Vector2 point in points)
+            foreach(VoronoiDiagramSite<T> point in points)
             {
                 _originalSites.Add(point);
             }
@@ -94,9 +93,9 @@ namespace PixelsForGlory.VoronoiDiagram
             }
 
             _sites.Clear();
-            foreach(Vector2 site in _originalSites)
+            foreach(VoronoiDiagramSite<T> site in _originalSites)
             {
-                _sites.Add(new VoronoiDiagramSite(_sites.Count, site));
+                _sites.Add(new VoronoiDiagramSite<T>(_sites.Count, site));
             }
             SortSitesAndSetValues();
 
@@ -108,13 +107,13 @@ namespace PixelsForGlory.VoronoiDiagram
                 int numGeneratedVertices = 0;
                 _currentSiteIndex = 0;
 
-                var priorityQueue = new VoronoiDiagramPriorityQueue(_sites.Count, _minValues, _deltaValues);
-                var edgeList = new VoronoiDiagramEdgeList(_sites.Count, _minValues, _deltaValues);
+                var priorityQueue = new VoronoiDiagramPriorityQueue<T>(_sites.Count, _minValues, _deltaValues);
+                var edgeList = new VoronoiDiagramEdgeList<T>(_sites.Count, _minValues, _deltaValues);
 
                 Vector2 currentIntersectionStar = Vector2.zero;
-                VoronoiDiagramSite currentSite;
+                VoronoiDiagramSite<T> currentSite;
 
-                var generatedEdges = new List<VoronoiDiagramEdge>();
+                var generatedEdges = new List<VoronoiDiagramEdge<T>>();
 
                 bool done = false;
                 _bottomMostSite = GetNextSite();
@@ -126,12 +125,12 @@ namespace PixelsForGlory.VoronoiDiagram
                         currentIntersectionStar = priorityQueue.GetMinimumBucketFirstPoint();
                     }
 
-                    VoronoiDiagramSite bottomSite;
-                    VoronoiDiagramHalfEdge bisector;
-                    VoronoiDiagramHalfEdge rightBound;
-                    VoronoiDiagramHalfEdge leftBound;
-                    VoronoiDiagramVertex vertex;
-                    VoronoiDiagramEdge edge;
+                    VoronoiDiagramSite<T> bottomSite;
+                    VoronoiDiagramHalfEdge<T> bisector;
+                    VoronoiDiagramHalfEdge<T> rightBound;
+                    VoronoiDiagramHalfEdge<T> leftBound;
+                    VoronoiDiagramVertex<T> vertex;
+                    VoronoiDiagramEdge<T> edge;
                     if(
                         currentSite != null &&
                         (
@@ -149,16 +148,16 @@ namespace PixelsForGlory.VoronoiDiagram
                         rightBound = leftBound.EdgeListRight;
                         bottomSite = GetRightRegion(leftBound);
 
-                        edge = VoronoiDiagramEdge.Bisect(bottomSite, currentSite);
+                        edge = VoronoiDiagramEdge<T>.Bisect(bottomSite, currentSite);
                         edge.Index = numGeneratedEdges;
                         numGeneratedEdges++;
 
                         generatedEdges.Add(edge);
 
-                        bisector = new VoronoiDiagramHalfEdge(edge, VoronoiDiagramEdgeType.Left);
+                        bisector = new VoronoiDiagramHalfEdge<T>(edge, VoronoiDiagramEdgeType.Left);
                         edgeList.Insert(leftBound, bisector);
 
-                        vertex = VoronoiDiagramVertex.Intersect(leftBound, bisector);
+                        vertex = VoronoiDiagramVertex<T>.Intersect(leftBound, bisector);
                         if(vertex != null)
                         {
                             priorityQueue.Delete(leftBound);
@@ -170,11 +169,11 @@ namespace PixelsForGlory.VoronoiDiagram
                         }
 
                         leftBound = bisector;
-                        bisector = new VoronoiDiagramHalfEdge(edge, VoronoiDiagramEdgeType.Right);
+                        bisector = new VoronoiDiagramHalfEdge<T>(edge, VoronoiDiagramEdgeType.Right);
 
                         edgeList.Insert(leftBound, bisector);
 
-                        vertex = VoronoiDiagramVertex.Intersect(bisector, rightBound);
+                        vertex = VoronoiDiagramVertex<T>.Intersect(bisector, rightBound);
                         if(vertex != null)
                         {
                             bisector.Vertex = vertex;
@@ -189,11 +188,11 @@ namespace PixelsForGlory.VoronoiDiagram
                     {
                         // Current intersection is the smallest
                         leftBound = priorityQueue.RemoveAndReturnMinimum();
-                        VoronoiDiagramHalfEdge leftLeftBound = leftBound.EdgeListLeft;
+                        VoronoiDiagramHalfEdge<T> leftLeftBound = leftBound.EdgeListLeft;
                         rightBound = leftBound.EdgeListRight;
-                        VoronoiDiagramHalfEdge rightRightBound = rightBound.EdgeListRight;
+                        VoronoiDiagramHalfEdge<T> rightRightBound = rightBound.EdgeListRight;
                         bottomSite = GetLeftRegion(leftBound);
-                        VoronoiDiagramSite topSite = GetRightRegion(rightBound);
+                        VoronoiDiagramSite<T> topSite = GetRightRegion(rightBound);
 
                         // These three sites define a Delaunay triangle
                         // Bottom, Top, EdgeList.GetRightRegion(rightBound);
@@ -224,18 +223,18 @@ namespace PixelsForGlory.VoronoiDiagram
                             edgeType = VoronoiDiagramEdgeType.Right;
                         }
 
-                        edge = VoronoiDiagramEdge.Bisect(bottomSite, topSite);
+                        edge = VoronoiDiagramEdge<T>.Bisect(bottomSite, topSite);
                         edge.Index = numGeneratedEdges;
                         numGeneratedEdges++;
 
                         generatedEdges.Add(edge);
 
-                        bisector = new VoronoiDiagramHalfEdge(edge, edgeType);
+                        bisector = new VoronoiDiagramHalfEdge<T>(edge, edgeType);
                         edgeList.Insert(leftLeftBound, bisector);
 
                         edge.SetEndpoint(v, edgeType == VoronoiDiagramEdgeType.Left ? VoronoiDiagramEdgeType.Right : VoronoiDiagramEdgeType.Left);
 
-                        vertex = VoronoiDiagramVertex.Intersect(leftLeftBound, bisector);
+                        vertex = VoronoiDiagramVertex<T>.Intersect(leftLeftBound, bisector);
                         if(vertex != null)
                         {
                             priorityQueue.Delete(leftLeftBound);
@@ -246,7 +245,7 @@ namespace PixelsForGlory.VoronoiDiagram
                             priorityQueue.Insert(leftLeftBound);
                         }
 
-                        vertex = VoronoiDiagramVertex.Intersect(bisector, rightRightBound);
+                        vertex = VoronoiDiagramVertex<T>.Intersect(bisector, rightRightBound);
                         if(vertex != null)
                         {
                             bisector.Vertex = vertex;
@@ -263,22 +262,23 @@ namespace PixelsForGlory.VoronoiDiagram
 
                 GeneratedSites.Clear();
                 // Bound the edges of the diagram
-                foreach(VoronoiDiagramEdge currentGeneratedEdge in generatedEdges)
+                foreach(VoronoiDiagramEdge<T> currentGeneratedEdge in generatedEdges)
                 {
                     currentGeneratedEdge.GenerateClippedEndPoints(Bounds);
                 }
 
-                foreach(VoronoiDiagramSite site in _sites)
+                foreach(VoronoiDiagramSite<T> site in _sites)
                 {
                     site.GenerateCentroid(Bounds);
                 }
 
-                foreach(VoronoiDiagramSite site in _sites)
+                foreach(VoronoiDiagramSite<T> site in _sites)
                 {
                     var generatedSite = new VoronoiDiagramGeneratedSite<T>(site.Index, site.Coordinate, site.Centroid, new T(), site.IsCorner, site.IsEdge);
                     generatedSite.Vertices.AddRange(site.Vertices);
+                    generatedSite.SiteData = site.SiteData;
 
-                    foreach(VoronoiDiagramEdge siteEdge in site.Edges)
+                    foreach(VoronoiDiagramEdge<T> siteEdge in site.Edges)
                     {
                         // Only add edges that are visible
                         // Don't need to check the Right because they will both be float.MinValue
@@ -300,6 +300,7 @@ namespace PixelsForGlory.VoronoiDiagram
                             generatedSite.NeighborSites.Add(siteEdge.RightSite.Index);
                         }
                     }
+                    
                     GeneratedSites.Add(generatedSite.Index, generatedSite);
 
                     // Finished with the edges, remove the references so they can be removed at the end of the method
@@ -320,7 +321,8 @@ namespace PixelsForGlory.VoronoiDiagram
                         return;
                     }
 
-                    _sites.Add(new VoronoiDiagramSite(_sites.Count, new Vector2(centroidPoint.x, centroidPoint.y)));
+                    var newSite = new VoronoiDiagramSite<T>(new Vector2(centroidPoint.x, centroidPoint.y), generatedSite.Value.SiteData);
+                    _sites.Add(new VoronoiDiagramSite<T>(_sites.Count, newSite));
                 }
                 SortSitesAndSetValues();
             }
@@ -504,7 +506,7 @@ namespace PixelsForGlory.VoronoiDiagram
         private void SortSitesAndSetValues()
         {
             _sites.Sort(
-                delegate(VoronoiDiagramSite siteA, VoronoiDiagramSite siteB)
+                delegate(VoronoiDiagramSite<T> siteA, VoronoiDiagramSite<T> siteB)
                 {
                     if(Mathf.RoundToInt(siteA.Coordinate.y) < Mathf.RoundToInt(siteB.Coordinate.y))
                     {
@@ -531,7 +533,7 @@ namespace PixelsForGlory.VoronoiDiagram
 
             var currentMin = new Vector2(float.MaxValue, float.MaxValue);
             var currentMax = new Vector2(float.MinValue, float.MinValue);
-            foreach(VoronoiDiagramSite site in _sites)
+            foreach(VoronoiDiagramSite<T> site in _sites)
             {
                 if(site.Coordinate.x < currentMin.x)
                 {
@@ -563,11 +565,11 @@ namespace PixelsForGlory.VoronoiDiagram
         /// Returns the next site and increments _currentSiteIndex
         /// </summary>
         /// <returns>The next site</returns>
-        private VoronoiDiagramSite GetNextSite()
+        private VoronoiDiagramSite<T> GetNextSite()
         {
             if(_currentSiteIndex < _sites.Count)
             {
-                VoronoiDiagramSite nextSite = _sites[_currentSiteIndex];
+                VoronoiDiagramSite<T> nextSite = _sites[_currentSiteIndex];
                 _currentSiteIndex++;
                 return nextSite;
             }
@@ -580,7 +582,7 @@ namespace PixelsForGlory.VoronoiDiagram
         /// </summary>
         /// <param name="halfEdge">The half edge to calculate from</param>
         /// <returns>The left region</returns>
-        private VoronoiDiagramSite GetLeftRegion(VoronoiDiagramHalfEdge halfEdge)
+        private VoronoiDiagramSite<T> GetLeftRegion(VoronoiDiagramHalfEdge<T> halfEdge)
         {
             if(halfEdge.Edge == null)
             {
@@ -602,7 +604,7 @@ namespace PixelsForGlory.VoronoiDiagram
         /// </summary>
         /// <param name="halfEdge">The half edge to calculate from</param>
         /// <returns>The right region</returns>
-        private VoronoiDiagramSite GetRightRegion(VoronoiDiagramHalfEdge halfEdge)
+        private VoronoiDiagramSite<T> GetRightRegion(VoronoiDiagramHalfEdge<T> halfEdge)
         {
             if(halfEdge.Edge == null)
             {

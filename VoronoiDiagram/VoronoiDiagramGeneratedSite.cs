@@ -1,6 +1,5 @@
 ﻿// Copyright 2016 afuzzyllama. All Rights Reserved.
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 namespace PixelsForGlory.VoronoiDiagram
@@ -21,8 +20,7 @@ namespace PixelsForGlory.VoronoiDiagram
         public bool IsCorner;
         public bool IsEdge;
 
-        public VoronoiDiagramGeneratedSite(int index, Vector2 coordinate, Vector2 centroid, T siteData, bool isCorner,
-            bool isEdge)
+        public VoronoiDiagramGeneratedSite(int index, Vector2 coordinate, Vector2 centroid, T siteData, bool isCorner, bool isEdge)
         {
             Index = index;
             Coordinate = coordinate;

@@ -15,7 +15,7 @@ namespace PixelsForGlory.VoronoiDiagram
     /// <summary>
     /// Represents a Voronoi Diagram edge.
     /// </summary>
-    public class VoronoiDiagramEdge
+    public class VoronoiDiagramEdge<T> where T : new()
     {
         public int Index;
 
@@ -24,19 +24,19 @@ namespace PixelsForGlory.VoronoiDiagram
         public float B;
         public float C;
 
-        public VoronoiDiagramVertex LeftEndPoint;
-        public VoronoiDiagramVertex RightEndPoint;
+        public VoronoiDiagramVertex<T> LeftEndPoint;
+        public VoronoiDiagramVertex<T> RightEndPoint;
 
         public Vector2 LeftClippedEndPoint;
         public Vector2 RightClippedEndPoint;
 
-        public VoronoiDiagramSite LeftSite;
-        public VoronoiDiagramSite RightSite;
+        public VoronoiDiagramSite<T> LeftSite;
+        public VoronoiDiagramSite<T> RightSite;
 
         /// <summary>
         /// Represents a deleted edge.  Any edge that needs to present a deleted edge will point to this.
         /// </summary>
-        public static VoronoiDiagramEdge Deleted = new VoronoiDiagramEdge();
+        public static VoronoiDiagramEdge<T> Deleted = new VoronoiDiagramEdge<T>();
 
         /// <summary>
         /// Return an edge that is the bisection between two sites
@@ -44,10 +44,10 @@ namespace PixelsForGlory.VoronoiDiagram
         /// <param name="siteA">The first site</param>
         /// <param name="siteB">The second site</param>
         /// <returns>The new edge</returns>
-        public static VoronoiDiagramEdge Bisect(VoronoiDiagramSite siteA, VoronoiDiagramSite siteB)
+        public static VoronoiDiagramEdge<T> Bisect(VoronoiDiagramSite<T> siteA, VoronoiDiagramSite<T> siteB)
         {
             float dx, dy;
-            var newEdge = new VoronoiDiagramEdge
+            var newEdge = new VoronoiDiagramEdge<T>
             {
                 LeftSite = siteA,
                 RightSite = siteB,
@@ -83,7 +83,7 @@ namespace PixelsForGlory.VoronoiDiagram
         /// </summary>
         /// <param name="vertex">The vertex that represents the end point</param>
         /// <param name="edgeType">The edge type of this vertex is (left or right) </param>
-        public void SetEndpoint(VoronoiDiagramVertex vertex, VoronoiDiagramEdgeType edgeType)
+        public void SetEndpoint(VoronoiDiagramVertex<T> vertex, VoronoiDiagramEdgeType edgeType)
         {
             if(edgeType == VoronoiDiagramEdgeType.None)
             {
@@ -109,7 +109,7 @@ namespace PixelsForGlory.VoronoiDiagram
             var minimumValues = Vector2.zero;
             var maximumValues = new Vector2(bounds.width, bounds.height);
 
-            VoronoiDiagramVertex vertexA, vertexB;
+            VoronoiDiagramVertex<T> vertexA, vertexB;
             Vector2 pointA, pointB;
 
             if(A.IsAlmostEqualTo(1f) && B >= 0f)

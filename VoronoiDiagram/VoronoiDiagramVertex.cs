@@ -7,7 +7,7 @@ namespace PixelsForGlory.VoronoiDiagram
     /// <summary>
     /// Represents a vertex in the Voronoi Diagram. 
     /// </summary>
-    public class VoronoiDiagramVertex
+    public class VoronoiDiagramVertex<T> where T : new()
     {
         /// <summary>
         /// Index of the vertex
@@ -25,10 +25,10 @@ namespace PixelsForGlory.VoronoiDiagram
         /// <param name="halfEdgeA">The first edge</param>
         /// <param name="halfEdgeB">The second edge</param>
         /// <returns>The vertex of the intersection. null if the two edges do not intersect</returns>
-        public static VoronoiDiagramVertex Intersect(VoronoiDiagramHalfEdge halfEdgeA, VoronoiDiagramHalfEdge halfEdgeB)
+        public static VoronoiDiagramVertex<T> Intersect(VoronoiDiagramHalfEdge<T> halfEdgeA, VoronoiDiagramHalfEdge<T> halfEdgeB)
         {
-            VoronoiDiagramEdge edgeA, edgeB, edge;
-            VoronoiDiagramHalfEdge halfEdge;
+            VoronoiDiagramEdge<T> edgeA, edgeB, edge;
+            VoronoiDiagramHalfEdge<T> halfEdge;
             float determinant, intersectionX, intersectionY;
             bool isRightOfSite;
 
@@ -82,7 +82,7 @@ namespace PixelsForGlory.VoronoiDiagram
                 return null;
             }
 
-            return new VoronoiDiagramVertex(-1, new Vector2(intersectionX, intersectionY));
+            return new VoronoiDiagramVertex<T>(-1, new Vector2(intersectionX, intersectionY));
         }
 
         /// <summary>

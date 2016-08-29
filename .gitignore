@@ -3,4 +3,5 @@ packages/
 bin/
 obj/
 *.csproj.user
+*.sln.DotSettings.user
 Thumbs.db

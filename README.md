@@ -24,7 +24,7 @@ The following code:
     int width = 4096;
     int height = 4096;
     
-    var voronoiDiagram = new VoronoiDiagram(new Rect(0f, 0f, width, height));    
+    var voronoiDiagram = new VoronoiDiagram<Color>(new Rect(0f, 0f, width, height));    
 
     var points = new List<Vector2>();
     while(points.Count < 1000)
@@ -32,19 +32,15 @@ The following code:
         int randX = Random.Range(0, width - 1);
         int randY = Random.Range(0, height - 1);
 
-        if(!points.Contains(new Vector2(randX, randY);
+        var point = new Vector2(randX, randY);
+        if(!points.Any(item => item.Coordinate == point))
         {
-            points.Add(new Vector2(randX, randY);
+            points.Add(new VoronoiDiagramSite<Color>(point, new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         }
     }
 
     voronoiDiagram.AddPoints(points);
     voronoiDiagram.GenerateSites(2);
-    
-    for(int i = 0; i < voronoiDiagram.GeneratedSites.Count; i++)
-    {
-        voronoiDiagram.GeneratedSites[i].Color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-    }
 
     var outImg = new Texture2D(width, height);
     outImg.SetPixels(voronoiDiagram.Get1DSampleArray().ToArray());
@@ -54,7 +50,9 @@ The following code:
 
 Will create a image similar to:
 
-![Voronoi Diagram](./VoronoiDiagramTest/OriginalImages/Diagram.png?raw=true "Voronoi Diagram")
+![Voronoi Diagram](./Diagram.png?raw=true "Voronoi Diagram")
+
+Additional information can be stored with a site through the generic type parameter.  This is accessed through the `SiteData` property.
 
 Citations:
 ----------

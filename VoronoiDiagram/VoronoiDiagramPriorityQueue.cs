@@ -8,11 +8,11 @@ namespace PixelsForGlory.VoronoiDiagram
     /// <summary>
     /// Priority queue for generating the diagram
     /// </summary>
-    public class VoronoiDiagramPriorityQueue
+    public class VoronoiDiagramPriorityQueue<T> where T : new()
     {
         private int _minimumBucket;
         private int _count;
-        private readonly List<VoronoiDiagramHalfEdge> _hash;
+        private readonly List<VoronoiDiagramHalfEdge<T>> _hash;
         private Vector2 _minimumValues;
         private Vector2 _deltaValues;
 
@@ -23,16 +23,16 @@ namespace PixelsForGlory.VoronoiDiagram
             _minimumValues = minimumValues;
             _deltaValues = deltaValues;
 
-            _hash = new List<VoronoiDiagramHalfEdge>();
+            _hash = new List<VoronoiDiagramHalfEdge<T>>();
             // Create an array full of dummies that represent the beginning of a bucket
             for(int i = 0; i < 4 * Mathf.Sqrt(numberOfSites); i++)
             {
-                _hash.Add(new VoronoiDiagramHalfEdge(null, VoronoiDiagramEdgeType.None));
+                _hash.Add(new VoronoiDiagramHalfEdge<T>(null, VoronoiDiagramEdgeType.None));
                 _hash[i].NextInPriorityQueue = null;
             }
         }
 
-        public int GetBucket(VoronoiDiagramHalfEdge halfEdge)
+        public int GetBucket(VoronoiDiagramHalfEdge<T> halfEdge)
         {
             int bucket;
 
@@ -50,9 +50,9 @@ namespace PixelsForGlory.VoronoiDiagram
             return bucket;
         }
 
-        public void Insert(VoronoiDiagramHalfEdge halfEdge)
+        public void Insert(VoronoiDiagramHalfEdge<T> halfEdge)
         {
-            VoronoiDiagramHalfEdge previous, next;
+            VoronoiDiagramHalfEdge<T> previous, next;
             int insertionBucket = GetBucket(halfEdge);
 
             if(insertionBucket < _minimumBucket)
@@ -81,13 +81,13 @@ namespace PixelsForGlory.VoronoiDiagram
             _count++;
         }
 
-        public void Delete(VoronoiDiagramHalfEdge halfEdge)
+        public void Delete(VoronoiDiagramHalfEdge<T> halfEdge)
         {
             int removalBucket = GetBucket(halfEdge);
 
             if(halfEdge.Vertex != null)
             {
-                VoronoiDiagramHalfEdge previous = _hash[removalBucket];
+                VoronoiDiagramHalfEdge<T> previous = _hash[removalBucket];
                 while(previous.NextInPriorityQueue != halfEdge)
                 {
                     previous = previous.NextInPriorityQueue;
@@ -119,9 +119,9 @@ namespace PixelsForGlory.VoronoiDiagram
                 );
         }
 
-        public VoronoiDiagramHalfEdge RemoveAndReturnMinimum()
+        public VoronoiDiagramHalfEdge<T> RemoveAndReturnMinimum()
         {
-            VoronoiDiagramHalfEdge minEdge;
+            VoronoiDiagramHalfEdge<T> minEdge;
 
             minEdge = _hash[_minimumBucket].NextInPriorityQueue;
             _hash[_minimumBucket].NextInPriorityQueue = minEdge.NextInPriorityQueue;

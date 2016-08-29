@@ -7,23 +7,23 @@ namespace PixelsForGlory.VoronoiDiagram
     /// <summary>
     /// Half edge representation (left or right) for a Voronoi Diagram.  
     /// </summary>
-    public class VoronoiDiagramHalfEdge
+    public class VoronoiDiagramHalfEdge<T> where T : new()
     {
-        public VoronoiDiagramEdge Edge;
+        public VoronoiDiagramEdge<T> Edge;
         public VoronoiDiagramEdgeType EdgeType;
-        public VoronoiDiagramVertex Vertex;
+        public VoronoiDiagramVertex<T> Vertex;
         public float StarY;
 
-        public VoronoiDiagramHalfEdge EdgeListLeft;
-        public VoronoiDiagramHalfEdge EdgeListRight;
-        public VoronoiDiagramHalfEdge NextInPriorityQueue;
+        public VoronoiDiagramHalfEdge<T> EdgeListLeft;
+        public VoronoiDiagramHalfEdge<T> EdgeListRight;
+        public VoronoiDiagramHalfEdge<T> NextInPriorityQueue;
 
         /// <summary>
         /// Creates a new half edge 
         /// </summary>
         /// <param name="edge">The edge of the new half edge</param>
         /// <param name="edgeType">The edge type that this half edge represents (left or right).  The only half edges that should be "None" are the buckets in the priority queue.</param>
-        public VoronoiDiagramHalfEdge(VoronoiDiagramEdge edge, VoronoiDiagramEdgeType edgeType)
+        public VoronoiDiagramHalfEdge(VoronoiDiagramEdge<T> edge, VoronoiDiagramEdgeType edgeType)
         {
             Edge = edge;
             EdgeType = edgeType;
@@ -41,7 +41,7 @@ namespace PixelsForGlory.VoronoiDiagram
         /// <returns>True if left, false if right</returns>
         public bool IsLeftOf(Vector2 point)
         {
-            VoronoiDiagramSite topSite = Edge.RightSite;
+            VoronoiDiagramSite<T> topSite = Edge.RightSite;
             bool isRightOfSite = point.x > topSite.Coordinate.x;
             bool isAbove;
 

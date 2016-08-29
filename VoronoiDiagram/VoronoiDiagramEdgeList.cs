@@ -8,11 +8,11 @@ namespace PixelsForGlory.VoronoiDiagram
     /// <summary>
     /// Edge list for generation of diagram
     /// </summary>
-    public class VoronoiDiagramEdgeList
+    public class VoronoiDiagramEdgeList<T> where T : new()
     {
-        public readonly List<VoronoiDiagramHalfEdge> Hash;
-        public readonly VoronoiDiagramHalfEdge LeftEnd;
-        public readonly VoronoiDiagramHalfEdge RightEnd;
+        public readonly List<VoronoiDiagramHalfEdge<T>> Hash;
+        public readonly VoronoiDiagramHalfEdge<T> LeftEnd;
+        public readonly VoronoiDiagramHalfEdge<T> RightEnd;
         public Vector2 MinimumValues;
         public Vector2 DeltaValues;
 
@@ -21,14 +21,14 @@ namespace PixelsForGlory.VoronoiDiagram
             MinimumValues = minimumValues;
             DeltaValues = deltaValues;
 
-            Hash = new List<VoronoiDiagramHalfEdge>();
+            Hash = new List<VoronoiDiagramHalfEdge<T>>();
             for(int i = 0; i < 2 * Mathf.Sqrt(numberOfSites); i++)
             {
                 Hash.Add(null);
             }
 
-            LeftEnd = new VoronoiDiagramHalfEdge(null, VoronoiDiagramEdgeType.None);
-            RightEnd = new VoronoiDiagramHalfEdge(null, VoronoiDiagramEdgeType.None);
+            LeftEnd = new VoronoiDiagramHalfEdge<T>(null, VoronoiDiagramEdgeType.None);
+            RightEnd = new VoronoiDiagramHalfEdge<T>(null, VoronoiDiagramEdgeType.None);
 
             LeftEnd.EdgeListLeft = null;
             LeftEnd.EdgeListRight = RightEnd;
@@ -40,7 +40,7 @@ namespace PixelsForGlory.VoronoiDiagram
             Hash[Hash.Count - 1] = RightEnd;
         }
 
-        public void Insert(VoronoiDiagramHalfEdge leftBound, VoronoiDiagramHalfEdge newHalfEdge)
+        public void Insert(VoronoiDiagramHalfEdge<T> leftBound, VoronoiDiagramHalfEdge<T> newHalfEdge)
         {
             newHalfEdge.EdgeListLeft = leftBound;
             newHalfEdge.EdgeListRight = leftBound.EdgeListRight;
@@ -48,18 +48,18 @@ namespace PixelsForGlory.VoronoiDiagram
             leftBound.EdgeListRight = newHalfEdge;
         }
 
-        public void Delete(VoronoiDiagramHalfEdge halfEdge)
+        public void Delete(VoronoiDiagramHalfEdge<T> halfEdge)
         {
             halfEdge.EdgeListLeft.EdgeListRight = halfEdge.EdgeListRight;
             halfEdge.EdgeListRight.EdgeListLeft = halfEdge.EdgeListLeft;
-            halfEdge.Edge = VoronoiDiagramEdge.Deleted;
+            halfEdge.Edge = VoronoiDiagramEdge<T>.Deleted;
             halfEdge.EdgeListLeft = null;
             halfEdge.EdgeListRight = null;
         }
 
-        public VoronoiDiagramHalfEdge GetFromHash(int bucket)
+        public VoronoiDiagramHalfEdge<T> GetFromHash(int bucket)
         {
-            VoronoiDiagramHalfEdge halfEdge;
+            VoronoiDiagramHalfEdge<T> halfEdge;
 
             if(bucket < 0 || bucket >= Hash.Count)
             {
@@ -67,7 +67,7 @@ namespace PixelsForGlory.VoronoiDiagram
             }
 
             halfEdge = Hash[bucket];
-            if(halfEdge != null && halfEdge.Edge == VoronoiDiagramEdge.Deleted)
+            if(halfEdge != null && halfEdge.Edge == VoronoiDiagramEdge<T>.Deleted)
             {
                 // Edge ready for deletion, return null instead
                 Hash[bucket] = null;
@@ -79,10 +79,10 @@ namespace PixelsForGlory.VoronoiDiagram
             return halfEdge;
         }
 
-        public VoronoiDiagramHalfEdge GetLeftBoundFrom(Vector2 point)
+        public VoronoiDiagramHalfEdge<T> GetLeftBoundFrom(Vector2 point)
         {
             int bucket;
-            VoronoiDiagramHalfEdge halfEdge;
+            VoronoiDiagramHalfEdge<T> halfEdge;
 
             bucket = Mathf.RoundToInt((point.x - MinimumValues.x) / DeltaValues.x * Hash.Count);
 

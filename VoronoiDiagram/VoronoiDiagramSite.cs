@@ -8,7 +8,7 @@ namespace PixelsForGlory.VoronoiDiagram
     /// <summary>
     /// Represents a Voronoi Diagram Site.  Must be instantiated as a pointer.
     /// </summary>
-    public class VoronoiDiagramSite
+    public class VoronoiDiagramSite<T> where T : new()
     {
         public int Index;
         public Vector2 Coordinate;
@@ -16,21 +16,54 @@ namespace PixelsForGlory.VoronoiDiagram
         public List<Vector2> Vertices;
         public bool IsCorner;
         public bool IsEdge;
-        public List<VoronoiDiagramEdge> Edges;
+        public List<VoronoiDiagramEdge<T>> Edges;
+        public T SiteData;
+
+        /// <summary>
+        /// Creates a site
+        /// </summary>
+        /// <param name="coordinate">Coordinate of the new site</param>
+        public VoronoiDiagramSite(Vector2 coordinate)
+        {
+            Index = -1;
+            Coordinate = coordinate;
+            IsCorner = false;
+            IsEdge = false;
+            Vertices = new List<Vector2>();
+            Edges = new List<VoronoiDiagramEdge<T>>();
+            SiteData = new T();
+        }
+
+        /// <summary>
+        /// Creates a site
+        /// </summary>
+        /// <param name="coordinate">Coordinate of the new site</param>
+        /// <param name="siteData">Site data to be passed along with the site</param>
+        public VoronoiDiagramSite(Vector2 coordinate, T siteData)
+        {
+            Index = -1;
+            Coordinate = coordinate;
+            IsCorner = false;
+            IsEdge = false;
+            Vertices = new List<Vector2>();
+            Edges = new List<VoronoiDiagramEdge<T>>();
+            SiteData = siteData;
+        }
 
         /// <summary>
         /// Creates a site
         /// </summary>
         /// <param name="index">Index of the new site</param>
-        /// <param name="coordinate">Coordinate of the new site</param>
-        public VoronoiDiagramSite(int index, Vector2 coordinate)
+        /// <param name="site">new site</param>
+        internal VoronoiDiagramSite(int index, VoronoiDiagramSite<T> site)
         {
             Index = index;
-            Coordinate = coordinate;
+            Coordinate = site.Coordinate;
             IsCorner = false;
             IsEdge = false;
             Vertices = new List<Vector2>();
-            Edges = new List<VoronoiDiagramEdge>();
+            Edges = new List<VoronoiDiagramEdge<T>>();
+            SiteData = site.SiteData;
         }
 
         /// <summary>
@@ -38,7 +71,7 @@ namespace PixelsForGlory.VoronoiDiagram
         /// </summary>
         /// <param name="vertex">Vertex to calculation distance from</param>
         /// <returns></returns>
-        public float GetDistanceFrom(VoronoiDiagramVertex vertex)
+        public float GetDistanceFrom(VoronoiDiagramVertex<T> vertex)
         {
             float dx, dy;
 
@@ -60,7 +93,7 @@ namespace PixelsForGlory.VoronoiDiagram
             bool hasXMax = false;
             bool hasMinY = false;
             bool hasMaxY = false;
-            foreach(VoronoiDiagramEdge edge in Edges)
+            foreach(VoronoiDiagramEdge<T> edge in Edges)
             {
                 // Don't add edge that is (0,0) -> (0,0).  Increment Index if no edge is removed, otherwise the remove should do this shifting for us
                 if(
