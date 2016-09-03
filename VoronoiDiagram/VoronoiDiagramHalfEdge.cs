@@ -2,7 +2,7 @@
 using UnityEngine;
 using PixelsForGlory.Extensions;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     /// <summary>
     /// Half edge representation (left or right) for a Voronoi Diagram.  

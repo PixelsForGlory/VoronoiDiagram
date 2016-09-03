@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VoronoiDiagram</RootNamespace>
-    <AssemblyName>VoronoiDiagram</AssemblyName>
+    <AssemblyName>PixelsForGlory.ComputationalSystem.VoronoiDiagram</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

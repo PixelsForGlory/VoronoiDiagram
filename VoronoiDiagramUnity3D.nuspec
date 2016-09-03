@@ -13,8 +13,8 @@
     <tags>Unity3D Voronoi</tags>
   </metadata>
   <files>
-    <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.dll" target="content\Assets\Plugins\PixelsForGlory\VoronoiDiagram" />
-    <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.pdb" target="content\Assets\Plugins\PixelsForGlory\VoronoiDiagram" />
+    <file src="VoronoiDiagram\bin\Release\PixelsForGlory.ComputationalSystem.VoronoiDiagram.dll" target="content\Assets\Plugins\" />
+    <file src="VoronoiDiagram\bin\Release\PixelsForGlory.ComputationalSystem.VoronoiDiagram.pdb" target="content\Assets\Plugins\" />
     <file src="NuGetTools\Uninstall.ps1" target="tools\PixelsForGlory\VoronoiDiagram\" />
   </files>
 </package>

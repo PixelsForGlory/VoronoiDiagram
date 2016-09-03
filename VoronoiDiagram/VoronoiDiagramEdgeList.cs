@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     /// <summary>
     /// Edge list for generation of diagram

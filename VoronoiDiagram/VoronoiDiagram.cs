@@ -1,15 +1,22 @@
 ﻿// Copyright 2016 afuzzyllama. All Rights Reserved.
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using PixelsForGlory.Extensions;
 using UnityEngine;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     public class VoronoiColorDiagram : VoronoiDiagram<Color>
     {
-        public VoronoiColorDiagram() {}
+        public VoronoiColorDiagram()
+        {
+        }
 
-        public VoronoiColorDiagram(Rect bounds) : base(bounds){}
+        public VoronoiColorDiagram(Rect bounds) : base(bounds)
+        {
+        }
     }
 
     /// <summary>
@@ -67,7 +74,8 @@ namespace PixelsForGlory.VoronoiDiagram
             {
                 if(!Bounds.Contains(point.Coordinate))
                 {
-                    Debug.LogError(string.Format("point ({0}, {1}) out of diagram bounds ({2}, {3})", point.Coordinate.x, point.Coordinate.y, Bounds.width, Bounds.height));
+                    Debug.LogError(string.Format("point ({0}, {1}) out of diagram bounds ({2}, {3})", point.Coordinate.x,
+                        point.Coordinate.y, Bounds.width, Bounds.height));
                     return false;
                 }
             }
@@ -139,9 +147,9 @@ namespace PixelsForGlory.VoronoiDiagram
                             (
                                 currentSite.Coordinate.y.IsAlmostEqualTo(currentIntersectionStar.y) &&
                                 currentSite.Coordinate.x < currentIntersectionStar.x
-                                )
                             )
                         )
+                    )
                     {
                         // Current processed site is the smallest
                         leftBound = edgeList.GetLeftBoundFrom(currentSite.Coordinate);
@@ -232,7 +240,10 @@ namespace PixelsForGlory.VoronoiDiagram
                         bisector = new VoronoiDiagramHalfEdge<T>(edge, edgeType);
                         edgeList.Insert(leftLeftBound, bisector);
 
-                        edge.SetEndpoint(v, edgeType == VoronoiDiagramEdgeType.Left ? VoronoiDiagramEdgeType.Right : VoronoiDiagramEdgeType.Left);
+                        edge.SetEndpoint(v,
+                            edgeType == VoronoiDiagramEdgeType.Left
+                                ? VoronoiDiagramEdgeType.Right
+                                : VoronoiDiagramEdgeType.Left);
 
                         vertex = VoronoiDiagramVertex<T>.Intersect(leftLeftBound, bisector);
                         if(vertex != null)
@@ -269,7 +280,22 @@ namespace PixelsForGlory.VoronoiDiagram
 
                 foreach(VoronoiDiagramSite<T> site in _sites)
                 {
-                    site.GenerateCentroid(Bounds);
+                    try
+                    {
+                        site.GenerateCentroid(Bounds);
+                    }
+                    catch(Exception)
+                    {
+                        Debug.Log("Coordinate");
+                        Debug.Log(site.Coordinate);
+                        Debug.Log("End points:");
+                        foreach(var edge in site.Edges)
+                        {
+                            Debug.Log(edge.LeftClippedEndPoint + " , " +  edge.RightClippedEndPoint);
+                        }
+                        throw;
+                    }
+                    
                 }
 
                 foreach(VoronoiDiagramSite<T> site in _sites)
@@ -314,15 +340,16 @@ namespace PixelsForGlory.VoronoiDiagram
                 // Lloyd's Algorithm
                 foreach(KeyValuePair<int, VoronoiDiagramGeneratedSite<T>> generatedSite in GeneratedSites)
                 {
-                    var centroidPoint = new Vector2(Mathf.RoundToInt(generatedSite.Value.Centroid.x), Mathf.RoundToInt(generatedSite.Value.Centroid.y));
-                    if(!Bounds.Contains(centroidPoint))
-                    {
-                        Debug.LogError("Centroid point outside of diagram bounds");
-                        return;
-                    }
-
+                    var centroidPoint = 
+                        new Vector2(
+                            Mathf.Clamp(generatedSite.Value.Centroid.x, 0, Bounds.width), 
+                            Mathf.Clamp(generatedSite.Value.Centroid.y, 0, Bounds.height));
                     var newSite = new VoronoiDiagramSite<T>(new Vector2(centroidPoint.x, centroidPoint.y), generatedSite.Value.SiteData);
-                    _sites.Add(new VoronoiDiagramSite<T>(_sites.Count, newSite));
+
+                    if(!_sites.Any(item => item.Coordinate.x.IsAlmostEqualTo(newSite.Coordinate.x) && item.Coordinate.y.IsAlmostEqualTo(newSite.Coordinate.y)))
+                    {
+                        _sites.Add(new VoronoiDiagramSite<T>(_sites.Count, newSite));
+                    }
                 }
                 SortSitesAndSetValues();
             }

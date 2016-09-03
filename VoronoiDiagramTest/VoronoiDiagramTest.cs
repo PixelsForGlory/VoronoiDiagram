@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnityEngine;
-using PixelsForGlory.VoronoiDiagram;
+using PixelsForGlory.ComputationalSystem;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace VoronoiDiagramTest

@@ -2,7 +2,7 @@
 using UnityEngine;
 using PixelsForGlory.Extensions;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     /// <summary>
     /// Represents a vertex in the Voronoi Diagram. 

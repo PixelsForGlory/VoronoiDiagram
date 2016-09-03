@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using PixelsForGlory.Extensions;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     /// <summary>
     /// Represents a Voronoi Diagram Site.  Must be instantiated as a pointer.

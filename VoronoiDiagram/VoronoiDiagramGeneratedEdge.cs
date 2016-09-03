@@ -1,7 +1,7 @@
 ﻿// Copyright 2016 afuzzyllama. All Rights Reserved.
 using UnityEngine;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     /// <summary>
     /// Stores final information about an edge that is returned in GenerateEdges

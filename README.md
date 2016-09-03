@@ -19,7 +19,7 @@ If using the Pixels for Glory NuGet repository, install the `PixelsForGlory.Voro
 
 The following code:
 
-    using PixelsForGlory.VoronoiDiagram;
+    using PixelsForGlory.ComputationalSystem;
     
     int width = 4096;
     int height = 4096;

@@ -13,7 +13,7 @@
     <tags>Unity3D Voronoi</tags>
   </metadata>
   <files>
-    <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.dll" target="lib\net35" />
-    <file src="VoronoiDiagram\bin\Release\VoronoiDiagram.pdb" target="lib\net35" />
+    <file src="VoronoiDiagram\bin\Release\PixelsForGlory.ComputationalSystem.VoronoiDiagram.dll" target="lib\net35" />
+    <file src="VoronoiDiagram\bin\Release\PixelsForGlory.ComputationalSystem.VoronoiDiagram.pdb" target="lib\net35" />
   </files>
 </package>

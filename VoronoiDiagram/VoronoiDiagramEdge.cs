@@ -3,7 +3,7 @@ using System;
 using PixelsForGlory.Extensions;
 using UnityEngine;
 
-namespace PixelsForGlory.VoronoiDiagram
+namespace PixelsForGlory.ComputationalSystem
 {
     public enum VoronoiDiagramEdgeType
     {
