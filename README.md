@@ -8,7 +8,7 @@ Build status:
 ## Building
 The solution has a reference set for `UnityEngine.dll`, but the path for this assembly is not set. To build the library, a reference path must be set to the Managed directory (Default is C:\Program Files\Unity\Editor\Data\Managed).  
 
-Additionally, this library is also dependent on the library from [PixelsForGlory/Extensions](https://github.com/PixelsForGlory/Extensions).  If using NuGet package manager, you can add the Pixels for Glory NuGet repository at http://pixelsforglory.azurewebsites.net/nuget to your package manager.  If not, the dependency can be resolved manually by downloading the library from the [latest release](https://github.com/PixelsForGlory/Extensions/releases).
+Additionally, this library is also dependent on the library from [PixelsForGlory/Extensions](https://github.com/PixelsForGlory/Extensions).  The dependency can be resolved manually by downloading the library from the [latest release](https://github.com/PixelsForGlory/Extensions/releases).
 
 ## Installation
 From a build or downloaded release, copy the `VoronoiDiagram.dll` to `[PROJECT DIR]\Assets\Plugins`.
