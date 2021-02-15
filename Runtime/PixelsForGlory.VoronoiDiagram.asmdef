@@ -1,0 +1,16 @@
+{
+    "name": "PixelsForGlory.VoronoiDiagram",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ed6686a618cb42944842417abf4fe4b5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

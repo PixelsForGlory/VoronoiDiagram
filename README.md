@@ -1,32 +1,21 @@
 # Voronoi Diagram Library
 Library to create voronoi diagrams in Unity3D.
 
-Build status:
-
-[![Build status](https://ci.appveyor.com/api/projects/status/2hrdm7nq8y487mf5/branch/master?svg=true)](https://ci.appveyor.com/project/LlamaBot/voronoidiagram/branch/master)
-
-## Building
-The solution has a reference set for `UnityEngine.dll`, but the path for this assembly is not set. To build the library, a reference path must be set to the Managed directory (Default is C:\Program Files\Unity\Editor\Data\Managed).  
-
-Additionally, this library is also dependent on the library from [PixelsForGlory/Extensions](https://github.com/PixelsForGlory/Extensions).  The dependency can be resolved manually by downloading the library from the [latest release](https://github.com/PixelsForGlory/Extensions/releases).
-
 ## Installation
-From a build or downloaded release, copy the `VoronoiDiagram.dll` to `[PROJECT DIR]\Assets\Plugins`.
-
-If using the Pixels for Glory NuGet repository, install the `PixelsForGlory.VoronoiDiagram` package into your own class library project or install the `PixelsForGlory.Unity3D.VoronoiDiagram` package into a Unity3D project.
+- Point to this repository to [install as a package in a Unity project](https://docs.unity3d.com/Manual/upm-git.html)
 
 ## Usage
 
 The following code:
 
-    using PixelsForGlory.ComputationalSystem;
+    using PixelsForGlory.VoronoiDiagram;
     
     int width = 4096;
     int height = 4096;
     
     var voronoiDiagram = new VoronoiDiagram<Color>(new Rect(0f, 0f, width, height));    
 
-    var points = new List<Vector2>();
+    var points = new List<VoronoiDiagramSite<Color>>();
     while(points.Count < 1000)
     {
         int randX = Random.Range(0, width - 1);

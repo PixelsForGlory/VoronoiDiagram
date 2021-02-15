@@ -1,0 +1,15 @@
+{
+    "name": "com.pixelsforglory.voronoidiagram",
+    "version": "3.0.31",
+    "displayName": "Voronoi Diagram",
+    "description": "Library to create voronoi diagrams in Unity3D.",
+    "unity": "2020.2",
+    "dependencies": {
+        "com.pixelsforglory.extensions": "1.0.10"
+    },
+    "author": {
+        "name": "Pixels for Glory",
+        "email": "admin@pixelsforglory.com",
+        "url": "https://www.pixelsforglory.com"
+    }
+}
