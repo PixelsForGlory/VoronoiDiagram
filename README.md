@@ -1,6 +1,11 @@
 # Voronoi Diagram Library
 Library to create voronoi diagrams in Unity3D.
 
+## Prerequisite
+- [PixelsForGlory.Extensions](https://github.com/PixelsForGlory/Extensions) needs to be installed first.
+
+https://github.com/PixelsForGlory/Extensions
+
 ## Installation
 - Point to this repository to [install as a package in a Unity project](https://docs.unity3d.com/Manual/upm-git.html)
 
